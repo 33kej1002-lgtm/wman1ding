@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 앱 만들기 프롬프트 10종</title>
+<style>
+:root{
+  --deep:#4a2f8f;
+  --deep2:#5b3fa8;
+  --lav:#e9e1ff;
+  --pastel:#f3eeff;
+  --pink:#ffe3ee;
+  --cream:#fff8ee;
+  --ink:#2b1f4d;
+  --ink2:#4d4170;
+  --line:#d9ccf5;
+  --radius:22px;
+  --shadow:0 6px 18px rgba(91,63,168,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:"Pretendard","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic","Segoe UI",sans-serif;
+  font-size:17px;line-height:1.7;color:var(--ink);
+  background:linear-gradient(180deg,var(--cream) 0%,#f7f1ff 40%,#fff 100%);
+  overflow-x:hidden;word-break:keep-all;overflow-wrap:anywhere;
+}
+button,a{font-family:inherit;font-size:16px}
+:focus-visible{outline:3px solid #f0a500;outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px 40px}
+
+/* header */
+header{
+  text-align:center;padding:36px 16px 26px;margin:0 -16px 8px;
+  background:linear-gradient(160deg,#efe6ff 0%,#ffe9f3 60%,#fff4e2 100%);
+  border-radius:0 0 34px 34px;position:relative;overflow:hidden;
+}
+header .deco{position:absolute;font-size:22px;opacity:.7;pointer-events:none}
+header .d1{top:14px;left:16px}header .d2{top:40px;right:18px}header .d3{bottom:16px;left:28px}
+h1{font-size:28px;line-height:1.35;color:var(--deep);font-weight:800;margin-bottom:10px}
+.sub{font-size:18px;color:var(--ink);font-weight:600;margin-bottom:12px}
+.tip{display:inline-block;background:#fff;border:2px dashed var(--line);border-radius:16px;padding:8px 16px;font-size:16px;color:var(--ink2)}
+
+/* steps */
+.steps{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:4px;margin:22px 0 18px}
+.step{background:#fff;border-radius:18px;padding:12px 4px;text-align:center;box-shadow:var(--shadow);border:2px solid var(--line)}
+.step .ic{font-size:30px;line-height:1.2;display:block}
+.step b{display:block;font-size:16px;color:var(--deep);line-height:1.35;margin-top:2px}
+.step span.n{display:block;font-size:16px;color:var(--ink2);font-weight:700}
+.arrow{font-size:20px;color:var(--deep2);font-weight:800}
+
+/* controls */
+.search{position:relative;margin-bottom:14px}
+.search input{
+  width:100%;height:56px;border:2px solid var(--line);border-radius:28px;padding:0 20px;
+  font-size:18px;color:var(--ink);background:#fff;box-shadow:var(--shadow);
+}
+.search input::placeholder{color:#6d6190}
+.search input:focus{outline:3px solid #f0a500;border-color:var(--deep2)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.chip{
+  min-height:48px;padding:0 16px;border-radius:24px;border:2px solid var(--line);
+  background:#fff;color:var(--ink);font-weight:700;cursor:pointer;
+}
+.chip[aria-pressed="true"]{background:var(--deep2);border-color:var(--deep2);color:#fff}
+.chip[aria-pressed="true"]::before{content:"✔ "}
+.views{display:flex;gap:8px;margin:6px 0 10px}
+.views .chip{flex:1;border-radius:16px}
+.count{font-size:16px;color:var(--ink2);margin:6px 4px 14px;font-weight:600}
+
+/* grid */
+.grid{display:grid;grid-template-columns:1fr;gap:20px}
+@media(min-width:700px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1000px){.grid{grid-template-columns:repeat(3,1fr)}}
+.card{
+  background:var(--bg);border-radius:var(--radius);box-shadow:var(--shadow);
+  border:2px solid #fff;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;min-width:0;
+}
+.card::before{content:"";display:block;height:8px;background:linear-gradient(90deg,var(--accent),var(--point))}
+.card-in{padding:16px 18px 20px;display:flex;flex-direction:column;gap:12px;flex:1}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.num{
+  background:var(--accent);color:#fff;font-weight:800;font-size:16px;
+  border-radius:14px;padding:4px 14px;min-height:32px;display:inline-flex;align-items:center;
+}
+.fav{
+  min-height:48px;padding:0 14px;border-radius:24px;border:2px solid var(--accent);
+  background:#fff;color:var(--ink);font-weight:700;cursor:pointer;
+}
+.fav[aria-pressed="true"]{background:#fff0f6;border-color:#c2307a;color:#8f1d57}
+.emoji{font-size:56px;line-height:1.1}
+.title{font-size:21px;font-weight:800;color:var(--ink);line-height:1.4}
+.desc{font-size:17px;color:var(--ink2)}
+.tags{font-size:16px;color:var(--ink2)}
+.tags span{display:inline-block;background:#ffffffcc;border:1px solid var(--line);border-radius:12px;padding:0 10px;margin:0 4px 4px 0}
+.prompt{
+  display:none;background:#fff;border:2px solid var(--line);border-radius:16px;
+  padding:14px 16px;font-size:17px;line-height:1.85;white-space:pre-wrap;color:var(--ink);
+}
+.prompt.open{display:block}
+.actions{display:flex;flex-direction:column;gap:12px;margin-top:auto}
+.btn{
+  min-height:52px;border-radius:16px;border:2px solid var(--accent);background:#fff;color:var(--ink);
+  font-weight:700;cursor:pointer;padding:8px 14px;display:flex;align-items:center;justify-content:center;
+  text-align:center;text-decoration:none;line-height:1.4;
+}
+.btn:active{transform:scale(.98)}
+.btn.copy{
+  background:var(--deep2);border-color:var(--deep);color:#fff;font-size:18px;font-weight:800;
+  min-height:58px;box-shadow:0 6px 14px rgba(91,63,168,.35);
+}
+.btn.copy.done{background:#1f7a4d;border-color:#175c3a}
+.btn.gem{background:#fff8e1;border-color:#d9a62e}
+.note{font-size:16px;color:var(--ink2);text-align:center;margin-top:-4px}
+.empty{
+  grid-column:1/-1;text-align:center;background:#fff;border:2px dashed var(--line);
+  border-radius:var(--radius);padding:30px 16px;color:var(--ink2);font-size:18px;
+}
+
+/* all copy */
+.all{margin:30px 0 10px;text-align:center}
+.all .btn{width:100%;max-width:520px;margin:0 auto;font-size:18px;min-height:60px;background:var(--deep);color:#fff;border-color:var(--deep);font-weight:800}
+.all .btn.done{background:#1f7a4d;border-color:#175c3a}
+
+/* help */
+.help{
+  margin-top:30px;background:#fff;border:2px solid var(--line);border-radius:var(--radius);
+  padding:22px 18px;box-shadow:var(--shadow);
+}
+.help h2{font-size:23px;color:var(--deep);margin-bottom:10px}
+.help ul{list-style:none;margin:12px 0}
+.help li{background:var(--pastel);border-radius:14px;padding:10px 14px;margin-bottom:8px;font-weight:600}
+.flow{text-align:center;font-size:20px;font-weight:800;color:var(--deep);background:var(--lav);border-radius:16px;padding:12px 8px;margin:14px 0}
+.big{text-align:center;font-size:19px;font-weight:800;color:#8f1d57}
+
+footer{text-align:center;margin-top:28px;font-size:16px;color:var(--ink2);line-height:1.6}
+footer b{display:block;color:var(--deep);font-size:17px}
+
+/* toast */
+#toast{
+  position:fixed;left:50%;bottom:24px;transform:translate(-50%,30px);opacity:0;pointer-events:none;
+  background:#2b1f4d;color:#fff;border-radius:18px;padding:14px 20px;font-size:17px;font-weight:700;
+  text-align:center;line-height:1.5;width:calc(100% - 32px);max-width:420px;
+  box-shadow:0 10px 24px rgba(0,0,0,.25);transition:.25s;z-index:50;
+}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+@media(prefers-reduced-motion:reduce){#toast,.btn{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="deco d1" aria-hidden="true">✨</span>
+    <span class="deco d2" aria-hidden="true">⭐</span>
+    <span class="deco d3" aria-hidden="true">💬</span>
+    <h1>✨ AI로 어떤 앱을<br>만들어볼까?</h1>
+    <p class="sub">마음에 드는 앱을 고르고<br>「복사하기」를 눌러 Gemini에 붙여넣어 보세요.</p>
+    <p class="tip">📱 스마트폰 하나면 충분해요.<br>코딩은 몰라도 됩니다.</p>
+  </header>
+
+  <section class="steps" aria-label="사용 순서">
+    <div class="step"><span class="ic" aria-hidden="true">📚</span><span class="n">①</span><b>앱 고르기</b></div>
+    <span class="arrow" aria-hidden="true">→</span>
+    <div class="step"><span class="ic" aria-hidden="true">📋</span><span class="n">②</span><b>프롬프트 복사</b></div>
+    <span class="arrow" aria-hidden="true">→</span>
+    <div class="step"><span class="ic" aria-hidden="true">✨</span><span class="n">③</span><b>Gemini에 붙여넣기</b></div>
+  </section>
+
+  <div class="search">
+    <label for="q" style="position:absolute;left:-9999px">앱 검색</label>
+    <input id="q" type="search" placeholder="🔍 어떤 앱을 만들고 싶나요?" autocomplete="off">
+  </div>
+
+  <div class="views" role="group" aria-label="보기 선택">
+    <button class="chip" data-view="all" aria-pressed="true">전체</button>
+    <button class="chip" data-view="fav" aria-pressed="false">♥ 즐겨찾기</button>
+  </div>
+
+  <div class="filters" id="filters" role="group" aria-label="카테고리 선택"></div>
+
+  <p class="count" id="count" aria-live="polite"></p>
+  <main class="grid" id="grid"></main>
+
+  <div class="all">
+    <button class="btn" id="copyAll">📦 전체 프롬프트 10개 한 번에 복사하기</button>
+  </div>
+
+  <section class="help">
+    <h2>💡 앱이 만들어진 다음에는?</h2>
+    <p>처음 만들어진 앱이 마음에 들지 않아도 괜찮아요.</p>
+    <p>Gemini에게 다시 말해보세요.</p>
+    <ul>
+      <li>“글씨를 더 크게 해줘.”</li>
+      <li>“보라색을 초록색으로 바꿔줘.”</li>
+      <li>“버튼을 하나 더 추가해줘.”</li>
+      <li>“기존 기능은 그대로 유지하고 이것만 바꿔줘.”</li>
+    </ul>
+    <p class="flow">말하기 → 만들기 → 눌러보기 → 고치기</p>
+    <p class="big">✨ 한 번에 완벽하게 만들 필요는 없어요.</p>
+  </section>
+
+  <footer>
+    <b>「세상을 바꾸는 AI 속으로」</b>
+    AI 앱 만들기 실습자료
+  </footer>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* 앱 11, 12, 13을 추가하려면 아래 배열에 같은 형태로 객체만 더하면 됩니다. */
+const categories = [
+  { key: '전체', label: '전체' },
+  { key: '독서', label: '📚 독서' },
+  { key: '생활', label: '🎯 생활' },
+  { key: '자기계발', label: '🎤 자기계발' },
+  { key: '관계', label: '👨‍👩‍👧 관계' },
+  { key: '재미', label: '🎮 재미' }
+];
+
+const apps = [
+  {
+    id: 1, icon: '📚', title: '오늘의 책처방 자판기',
+    desc: '내 기분과 상황에 맞는 실제 책을 추천받아요.',
+    cats: ['독서'], keywords: '책 독서 추천 도서 북카페',
+    theme: { bg: '#efe8ff', accent: '#7a5cc7', point: '#c9b6f5' },
+    prompt: `스마트폰에서 사용할 수 있는 「오늘의 책처방 자판기」 앱을 만들어줘. 사용자가 기분·함께 읽을 사람·읽을 시간을 선택하면 실제 출간된 책 3권의 제목과 저자, 추천 이유, 독서 미션을 보여주고 모든 버튼이 실제로 작동하며 큰 글씨의 따뜻한 북카페 디자인으로 바로 실행할 수 있게 만들어줘.`
+  },
+  {
+    id: 2, icon: '🎡', title: '오늘 뭐 하지? 생활 룰렛',
+    desc: '버튼 한 번으로 오늘의 작은 미션을 뽑아요.',
+    cats: ['생활', '재미'], keywords: '룰렛 미션 운동 정리 게임',
+    theme: { bg: '#ffe6f0', accent: '#d6568c', point: '#ffc0d8' },
+    prompt: `스마트폰에서 사용할 수 있는 「오늘 뭐 하지? 생활 룰렛」 앱을 만들어줘. 버튼을 누르면 산책·독서·정리·스트레칭·전화하기·음악 듣기·차 마시기 등 20개의 생활 미션 중 하나가 룰렛처럼 재미있게 선택되고 다시 돌리기 버튼도 실제로 작동하게 만들어줘.`
+  },
+  {
+    id: 3, icon: '🧠', title: '나의 독서 유형 테스트',
+    desc: '7개의 질문으로 나의 독서 스타일을 알아봐요.',
+    cats: ['독서', '재미'], keywords: '책 독서 유형 테스트 심리 성향',
+    theme: { bg: '#f1e3ff', accent: '#9150c9', point: '#dcb8f7' },
+    prompt: `스마트폰에서 사용할 수 있는 「나의 독서 유형 테스트」 앱을 만들어줘. 책을 고르는 기준과 독서 습관에 관한 쉬운 질문 7개에 답하면 감성충전형·지식탐험형·이야기몰입형·생각확장형 중 하나의 결과와 특징, 추천 독서법을 보여주는 재미있는 테스트 앱으로 만들어줘.`
+  },
+  {
+    id: 4, icon: '🎤', title: '1분 스피치 주제 뽑기',
+    desc: '즉석 말하기 주제와 60초 타이머로 스피치를 연습해요.',
+    cats: ['자기계발'], keywords: '스피치 말하기 발표 타이머 연습 강의',
+    theme: { bg: '#e7e0f4', accent: '#6c58a0', point: '#bfb0e0' },
+    prompt: `스마트폰에서 사용할 수 있는 「1분 스피치 주제 뽑기」 앱을 만들어줘. 버튼을 누를 때마다 일상·관계·행복·도전·여행 등의 즉석 말하기 주제와 핵심 단어 3개를 무작위로 보여주고 60초 타이머와 새로운 주제 뽑기 버튼이 실제로 작동하게 만들어줘.`
+  },
+  {
+    id: 5, icon: '👨‍👩‍👧', title: '우리 가족 추억 질문 상자',
+    desc: '따뜻한 질문 하나로 가족 이야기를 시작해요.',
+    cats: ['관계'], keywords: '가족 추억 질문 대화 부모 자녀',
+    theme: { bg: '#ffe0e9', accent: '#c4487a', point: '#ffb6cf' },
+    prompt: `스마트폰에서 사용할 수 있는 「우리 가족 추억 질문 상자」 앱을 만들어줘. 버튼을 누르면 어린 시절·학교·첫 직장·가족·여행·음식·꿈 등 가족과 이야기 나눌 수 있는 따뜻한 질문 30개 중 하나가 나타나고 다음 질문 버튼을 누르면 새로운 질문이 나오게 만들어줘.`
+  },
+  {
+    id: 6, icon: '🥕', title: '오늘 뭐 먹지? 냉장고 메뉴 뽑기',
+    desc: '냉장고 속 재료로 오늘의 메뉴를 추천받아요.',
+    cats: ['생활'], keywords: '요리 음식 메뉴 냉장고 재료 레시피 식사',
+    theme: { bg: '#e4f5e8', accent: '#3f9a63', point: '#c9b6f5' },
+    prompt: `스마트폰에서 사용할 수 있는 「오늘 뭐 먹지? 냉장고 메뉴 뽑기」 앱을 만들어줘. 사용자가 계란·두부·김치·감자·양파·닭고기·버섯 등 가지고 있는 재료를 여러 개 선택하면 그 재료로 만들기 쉬운 메뉴 3개와 간단한 조리 순서를 보여주게 만들어줘.`
+  },
+  {
+    id: 7, icon: '💛', title: '오늘의 마음 응급상자',
+    desc: '지금 내 마음에 필요한 작은 행동과 응원을 받아요.',
+    cats: ['자기계발', '생활'], keywords: '마음 응원 위로 감정 힐링 기분',
+    theme: { bg: '#ffe8e2', accent: '#d9695a', point: '#ffd0c4' },
+    prompt: `스마트폰에서 사용할 수 있는 「오늘의 마음 응급상자」 앱을 만들어줘. 사용자가 지쳤어요·화나요·속상해요·답답해요·외로워요 중 하나를 선택하면 지금 바로 5분 안에 해볼 수 있는 가벼운 행동 미션과 따뜻한 한 줄 응원을 보여주는 편안한 디자인의 앱으로 만들어줘.`
+  },
+  {
+    id: 8, icon: '⭕', title: '우리 동네 OX 퀴즈 게임',
+    desc: 'OX 퀴즈를 풀고 바로 점수까지 확인해요.',
+    cats: ['재미', '독서'], keywords: '퀴즈 OX 게임 문제 점수 도서관 상식',
+    theme: { bg: '#e9e6ff', accent: '#6a4fc4', point: '#9fb8f2' },
+    prompt: `스마트폰에서 사용할 수 있는 「우리 동네 OX 퀴즈 게임」 앱을 만들어줘. 독서·도서관·생활상식에 관한 쉬운 OX 문제 10개를 한 문제씩 보여주고 O 또는 X를 누르면 즉시 정답과 짧은 설명이 나오며 마지막에 총점과 재미있는 결과 메시지를 보여주게 만들어줘.`
+  },
+  {
+    id: 9, icon: '✅', title: '30일 작은 습관 챌린지',
+    desc: '매일 작은 습관을 체크하며 30일 동안 이어가요.',
+    cats: ['자기계발', '생활'], keywords: '습관 챌린지 체크 30일 루틴 목표',
+    theme: { bg: '#eee8ff', accent: '#7a5cc7', point: '#a6dfb8' },
+    prompt: `스마트폰에서 사용할 수 있는 「30일 작은 습관 챌린지」 앱을 만들어줘. 사용자가 ‘하루 10분 독서하기’처럼 습관 하나를 적고 1일부터 30일까지 매일 완료 체크를 하면 달성 개수와 진행률이 자동으로 표시되고 오늘의 응원 메시지도 보여주게 만들어줘.`
+  },
+  {
+    id: 10, icon: '🎁', title: '오늘의 행운 미션 뽑기',
+    desc: '버튼을 누르고 오늘의 작은 행복 미션을 받아요.',
+    cats: ['재미', '생활'], keywords: '행운 미션 뽑기 자판기 행복 선물',
+    theme: { bg: '#f2eaff', accent: '#8a5cc7', point: '#f0c75e' },
+    prompt: `스마트폰에서 사용할 수 있는 「오늘의 행운 미션 뽑기」 앱을 만들어줘. ‘고마운 사람에게 문자 보내기·책 5쪽 읽기·10분 산책하기·나에게 칭찬 한마디 하기’ 같은 작은 행복 미션 30개 중 하나를 자판기처럼 무작위로 뽑아주고 다시 뽑기 버튼과 완료 체크 버튼도 실제로 작동하게 만들어줘.`
+  }
+];
+
+const state = { cat: '전체', view: 'all', q: '', favs: new Set(), open: new Set() };
+const $grid = document.getElementById('grid');
+const $count = document.getElementById('count');
+const $filters = document.getElementById('filters');
+const $q = document.getElementById('q');
+const $toast = document.getElementById('toast');
+let toastTimer = null;
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+function pad(n) { return n < 10 ? '0' + n : String(n); }
+
+function showToast(msg) {
+  $toast.innerHTML = msg;
+  $toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { $toast.classList.remove('show'); }, 2200);
+}
+
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.setAttribute('readonly', '');
+  ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;font-size:16px;';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try { ta.setSelectionRange(0, text.length); } catch (e) {}
+  var ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+  document.body.removeChild(ta);
+  return ok;
+}
+
+async function copyText(text) {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch (e) { /* fallback 사용 */ }
+  return fallbackCopy(text);
+}
+
+function flashButton(btn, doneText) {
+  if (!btn) return;
+  var original = btn.dataset.label || btn.textContent;
+  btn.dataset.label = original;
+  btn.textContent = doneText;
+  btn.classList.add('done');
+  clearTimeout(btn._t);
+  btn._t = setTimeout(function () {
+    btn.textContent = btn.dataset.label;
+    btn.classList.remove('done');
+  }, 2000);
+}
+
+function matches(app) {
+  if (state.view === 'fav' && !state.favs.has(app.id)) return false;
+  if (state.cat !== '전체' && app.cats.indexOf(state.cat) === -1) return false;
+  var q = state.q.trim().toLowerCase();
+  if (q) {
+    var hay = (app.title + ' ' + app.desc + ' ' + app.keywords + ' ' + app.cats.join(' ')).toLowerCase();
+    if (hay.indexOf(q) === -1) return false;
+  }
+  return true;
+}
+
+function cardHTML(app) {
+  var isFav = state.favs.has(app.id);
+  var isOpen = state.open.has(app.id);
+  var t = app.theme;
+  return '<article class="card" style="--bg:' + t.bg + ';--accent:' + t.accent + ';--point:' + t.point + '">' +
+    '<div class="card-in">' +
+      '<div class="top">' +
+        '<span class="num">No.' + pad(app.id) + '</span>' +
+        '<button class="fav" data-action="fav" data-id="' + app.id + '" aria-pressed="' + isFav + '" aria-label="' + esc(app.title) + ' 즐겨찾기">' +
+          (isFav ? '♥' : '♡') + ' 즐겨찾기</button>' +
+      '</div>' +
+      '<div class="emoji" aria-hidden="true">' + app.icon + '</div>' +
+      '<h2 class="title">' + esc(app.title) + '</h2>' +
+      '<p class="desc">' + esc(app.desc) + '</p>' +
+      '<div class="tags">' + app.cats.map(function (c) { return '<span>' + esc(c) + '</span>'; }).join('') + '</div>' +
+      '<div class="prompt' + (isOpen ? ' open' : '') + '" id="p' + app.id + '">' + esc(app.prompt) + '</div>' +
+      '<div class="actions">' +
+        '<button class="btn" data-action="toggle" data-id="' + app.id + '" aria-expanded="' + isOpen + '" aria-controls="p' + app.id + '">' +
+          (isOpen ? '🔼 프롬프트 접기' : '👀 프롬프트 보기') + '</button>' +
+        '<button class="btn copy" data-action="copy" data-id="' + app.id + '">📋 프롬프트 복사하기</button>' +
+        '<a class="btn gem" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">✨ Gemini 열기</a>' +
+        '<p class="note">복사한 프롬프트를 Gemini 입력창에 붙여넣으세요.</p>' +
+      '</div>' +
+    '</div>' +
+  '</article>';
+}
+
+function render() {
+  var list = apps.filter(matches);
+  $count.textContent = '총 ' + list.length + '개의 앱이 있어요';
+  if (!list.length) {
+    var msg = state.view === 'fav' && !state.q && state.cat === '전체'
+      ? '아직 즐겨찾기한 앱이 없어요.<br>카드의 「♡ 즐겨찾기」를 눌러 보세요.'
+      : '찾는 앱이 없어요.<br>다른 단어로 검색하거나 「전체」를 눌러 보세요.';
+    $grid.innerHTML = '<div class="empty">' + msg + '</div>';
+    return;
+  }
+  $grid.innerHTML = list.map(cardHTML).join('');
+}
+
+function renderFilters() {
+  $filters.innerHTML = categories.map(function (c) {
+    return '<button class="chip" data-cat="' + esc(c.key) + '" aria-pressed="' + (state.cat === c.key) + '">' + esc(c.label) + '</button>';
+  }).join('');
+}
+
+/* 이벤트 */
+$grid.addEventListener('click', async function (e) {
+  var el = e.target.closest('[data-action]');
+  if (!el) return;
+  var id = Number(el.dataset.id);
+  var app = apps.find(function (a) { return a.id === id; });
+  if (!app) return;
+  var action = el.dataset.action;
+
+  if (action === 'copy') {
+    var ok = await copyText(app.prompt);
+    if (ok) {
+      flashButton(el, '✅ 복사 완료!');
+      showToast('프롬프트를 복사했어요!<br>이제 Gemini에 붙여넣어 보세요.');
+    } else {
+      showToast('복사가 안 됐어요.<br>「프롬프트 보기」에서 글을 길게 눌러 복사해 주세요.');
+    }
+  } else if (action === 'toggle') {
+    var panel = document.getElementById('p' + id);
+    var open = !state.open.has(id);
+    if (open) state.open.add(id); else state.open.delete(id);
+    panel.classList.toggle('open', open);
+    el.setAttribute('aria-expanded', String(open));
+    el.textContent = open ? '🔼 프롬프트 접기' : '👀 프롬프트 보기';
+  } else if (action === 'fav') {
+    if (state.favs.has(id)) state.favs.delete(id); else state.favs.add(id);
+    render();
+    var again = $grid.querySelector('[data-action="fav"][data-id="' + id + '"]');
+    if (again) again.focus();
+  }
+});
+
+$filters.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-cat]');
+  if (!b) return;
+  state.cat = b.dataset.cat;
+  renderFilters();
+  render();
+});
+
+document.querySelector('.views').addEventListener('click', function (e) {
+  var b = e.target.closest('[data-view]');
+  if (!b) return;
+  state.view = b.dataset.view;
+  document.querySelectorAll('.views .chip').forEach(function (c) {
+    c.setAttribute('aria-pressed', String(c.dataset.view === state.view));
+  });
+  render();
+});
+
+$q.addEventListener('input', function () {
+  state.q = $q.value;
+  render();
+});
+
+document.getElementById('copyAll').addEventListener('click', async function (e) {
+  var btn = e.currentTarget;
+  var text = apps.map(function (a) {
+    return '[앱 ' + pad(a.id) + '] ' + a.title + '\n' + a.prompt;
+  }).join('\n\n');
+  var ok = await copyText(text);
+  if (ok) {
+    flashButton(btn, '✅ 복사 완료!');
+    showToast('전체 프롬프트 ' + apps.length + '개를 복사했어요!<br>필요한 부분을 Gemini에 붙여넣어 보세요.');
+  } else {
+    showToast('복사가 안 됐어요.<br>각 카드의 복사 버튼을 이용해 주세요.');
+  }
+});
+
+renderFilters();
+render();
+</script>
+</body>
+</html>
